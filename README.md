@@ -1,4 +1,6 @@
-# Carbon Compass
+# Carbon-footprint-
+
+## Carbon Compass
 
 Carbon Compass is a personal carbon-footprint navigator that helps individuals understand, track, and reduce their emissions through small weekly actions and personalized insights.
 
