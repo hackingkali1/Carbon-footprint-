@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Carbon Compass</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="ambient-grid" aria-hidden="true"></div>
+    <div class="signal-sweep" aria-hidden="true"></div>
+
+    <div class="app-shell">
+      <header class="topbar">
+        <a class="brand" href="#overview" aria-label="Carbon Compass home">
+          <span class="brand-mark" aria-hidden="true">C</span>
+          <span>
+            <strong>Carbon Compass</strong>
+            <small>Personal footprint navigator</small>
+          </span>
+        </a>
+
+        <nav class="topnav" aria-label="Primary">
+          <a href="#overview">Overview</a>
+          <a href="#tracker">Track</a>
+          <a href="#actions">Reduce</a>
+          <a href="#learn">Learn</a>
+          <a href="#guide">EcoGuide</a>
+        </nav>
+      </header>
+
+      <main>
+        <section class="overview-grid" id="overview" aria-labelledby="overview-title">
+          <div class="control-panel">
+            <div class="section-kicker">Today</div>
+            <h1 id="overview-title">Turn daily choices into a cleaner route.</h1>
+            <p class="lede">
+              Estimate your weekly carbon footprint, see what drives it, and get simple actions matched to your habits.
+            </p>
+
+            <div class="engagement-strip" aria-label="Live engagement">
+              <button type="button" class="pulse-button" id="demoScenario">Run scenario</button>
+              <button type="button" class="pulse-button" id="nudgeChat">Ask EcoGuide</button>
+              <div class="live-chip">
+                <span class="live-dot" aria-hidden="true"></span>
+                <span id="liveChallenge">Live route recalculating</span>
+              </div>
+            </div>
+
+            <form id="footprintForm" class="input-grid">
+              <label>
+                Household size
+                <input type="number" id="household" min="1" max="12" step="1" value="3" />
+              </label>
+
+              <label>
+                Electricity per week
+                <span class="unit-input">
+                  <input type="number" id="electricity" min="0" max="500" step="1" value="58" />
+                  <span>kWh</span>
+                </span>
+              </label>
+
+              <label>
+                Renewable share
+                <span class="range-row">
+                  <input type="range" id="renewable" min="0" max="100" step="5" value="10" />
+                  <output id="renewableValue">10%</output>
+                </span>
+              </label>
+
+              <label>
+                Main transport
+                <select id="transportMode">
+                  <option value="car">Car</option>
+                  <option value="motorbike">Motorbike</option>
+                  <option value="bus">Bus</option>
+                  <option value="metro">Metro or train</option>
+                  <option value="cycle">Walk or cycle</option>
+                </select>
+              </label>
+
+              <label>
+                Commute distance per week
+                <span class="unit-input">
+                  <input type="number" id="commuteKm" min="0" max="1000" step="1" value="85" />
+                  <span>km</span>
+                </span>
+              </label>
+
+              <label>
+                Flight hours per month
+                <input type="number" id="flightHours" min="0" max="80" step="1" value="0" />
+              </label>
+
+              <label>
+                Diet pattern
+                <select id="diet">
+                  <option value="meat">Meat often</option>
+                  <option value="mixed" selected>Mixed</option>
+                  <option value="vegetarian">Vegetarian</option>
+                  <option value="plant">Mostly plant based</option>
+                </select>
+              </label>
+
+              <label>
+                Low-carbon meals per week
+                <span class="range-row">
+                  <input type="range" id="lowCarbonMeals" min="0" max="21" step="1" value="6" />
+                  <output id="mealValue">6</output>
+                </span>
+              </label>
+
+              <label>
+                Online deliveries per month
+                <input type="number" id="deliveries" min="0" max="80" step="1" value="5" />
+              </label>
+
+              <label>
+                Waste bags per week
+                <input type="number" id="wasteBags" min="0" max="20" step="1" value="3" />
+              </label>
+
+              <label>
+                Recycling and reuse
+                <span class="range-row">
+                  <input type="range" id="recycling" min="0" max="100" step="5" value="35" />
+                  <output id="recyclingValue">35%</output>
+                </span>
+              </label>
+
+              <label>
+                Personal goal
+                <select id="goal">
+                  <option value="starter">Start gently</option>
+                  <option value="balanced" selected>Balanced cuts</option>
+                  <option value="bold">Bold reduction</option>
+                </select>
+              </label>
+            </form>
+          </div>
+
+          <aside class="dashboard" aria-label="Footprint summary">
+            <div class="score-row">
+              <div>
+                <span class="eyebrow">Weekly footprint</span>
+                <div class="score"><span id="weeklyScore">0</span><small>kg CO2e</small></div>
+              </div>
+              <button class="ghost-button" id="saveWeek" type="button">Save week</button>
+            </div>
+
+            <div class="impact-pulse" aria-label="Live impact level">
+              <div class="pulse-meter">
+                <span id="pulseFill"></span>
+              </div>
+              <div>
+                <strong id="impactTitle">Impact level warming up</strong>
+                <span id="impactText">The signal changes as your weekly habits change.</span>
+              </div>
+            </div>
+
+            <div class="compass-wrap" aria-label="Carbon compass">
+              <div class="compass" id="compass">
+                <div class="compass-ring"></div>
+                <div class="needle" id="needle"></div>
+                <div class="center-dot"></div>
+                <span class="direction north">Home</span>
+                <span class="direction east">Travel</span>
+                <span class="direction south">Food</span>
+                <span class="direction west">Stuff</span>
+              </div>
+              <div class="compass-caption">
+                <strong id="compassTitle">Finding your biggest source</strong>
+                <span id="compassText">Adjust your habits to update the route.</span>
+              </div>
+            </div>
+
+            <div class="breakdown" id="breakdown"></div>
+
+            <div class="insight-panel">
+              <span class="eyebrow">Personal insight</span>
+              <p id="primaryInsight">Your recommendations will appear here.</p>
+            </div>
+          </aside>
+        </section>
+
+        <section class="tracker-section" id="tracker" aria-labelledby="tracker-title">
+          <div class="section-heading">
+            <div>
+              <div class="section-kicker">Track</div>
+              <h2 id="tracker-title">Your footprint log</h2>
+            </div>
+            <div class="mini-stat">
+              <span>Trend</span>
+              <strong id="trendLabel">No saved weeks yet</strong>
+            </div>
+          </div>
+
+          <div class="tracker-grid">
+            <div class="chart-panel">
+              <canvas id="historyChart" width="900" height="360" aria-label="Saved weekly carbon footprint chart"></canvas>
+            </div>
+            <div class="log-panel">
+              <div class="log-header">
+                <span>Recent weeks</span>
+                <button type="button" class="text-button" id="clearLog">Clear</button>
+              </div>
+              <div id="historyList" class="history-list"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="actions-section" id="actions" aria-labelledby="actions-title">
+          <div class="section-heading">
+            <div>
+              <div class="section-kicker">Reduce</div>
+              <h2 id="actions-title">A route made from small actions</h2>
+            </div>
+            <div class="savings-badge">
+              <span>Planned savings</span>
+              <strong><span id="plannedSavings">0</span> kg/week</strong>
+            </div>
+          </div>
+
+          <div class="route-board">
+            <div class="route-line" aria-hidden="true"></div>
+            <article class="route-card priority">
+              <span class="route-step">1</span>
+              <h3 id="nextBestTitle">Choose an action</h3>
+              <p id="nextBestText">The planner will choose your best next move from the footprint you enter.</p>
+            </article>
+            <article class="route-card">
+              <span class="route-step">2</span>
+              <h3>Stack habits</h3>
+              <p>Pick actions with low effort first, then add one medium effort change after it feels normal.</p>
+            </article>
+            <article class="route-card">
+              <span class="route-step">3</span>
+              <h3>Save weekly</h3>
+              <p>Log your week to watch whether the route is bending downward over time.</p>
+            </article>
+          </div>
+
+          <div class="filter-row" role="group" aria-label="Action filters">
+            <button type="button" class="filter active" data-filter="all">All</button>
+            <button type="button" class="filter" data-filter="home">Home</button>
+            <button type="button" class="filter" data-filter="travel">Travel</button>
+            <button type="button" class="filter" data-filter="food">Food</button>
+            <button type="button" class="filter" data-filter="stuff">Stuff</button>
+          </div>
+
+          <div class="action-grid" id="actionGrid"></div>
+        </section>
+
+        <section class="guide-section" id="guide" aria-labelledby="guide-title">
+          <div class="section-heading">
+            <div>
+              <div class="section-kicker">EcoGuide</div>
+              <h2 id="guide-title">Chat with your footprint</h2>
+            </div>
+            <div class="mini-stat">
+              <span>Mode</span>
+              <strong>Personal coach</strong>
+            </div>
+          </div>
+
+          <div class="guide-grid">
+            <article class="challenge-panel">
+              <span class="learn-index">Live challenge</span>
+              <h3 id="challengeTitle">Beat your biggest source</h3>
+              <p id="challengeCopy">The challenge updates from your strongest emission category.</p>
+              <div class="challenge-actions">
+                <button type="button" class="ghost-button" id="spinChallenge">Spin challenge</button>
+                <button type="button" class="text-button" id="autoPlan">Plan top three</button>
+              </div>
+            </article>
+
+            <article class="chatbot" aria-label="EcoGuide chatbot">
+              <div class="chat-header">
+                <div>
+                  <span class="eyebrow">Carbon assistant</span>
+                  <h3>EcoGuide</h3>
+                </div>
+                <span class="status-pill">Live</span>
+              </div>
+
+              <div class="chat-messages" id="chatMessages" aria-live="polite"></div>
+
+              <div class="prompt-chips" aria-label="Suggested prompts">
+                <button type="button" data-prompt="What should I do first?">First move</button>
+                <button type="button" data-prompt="Why is my score high?">Explain score</button>
+                <button type="button" data-prompt="Give me a 7 day plan">7 day plan</button>
+              </div>
+
+              <form class="chat-form" id="chatForm">
+                <input id="chatInput" type="text" autocomplete="off" placeholder="Ask about this footprint" />
+                <button type="submit">Send</button>
+              </form>
+            </article>
+          </div>
+        </section>
+
+        <section class="learn-section" id="learn" aria-labelledby="learn-title">
+          <div class="section-heading">
+            <div>
+              <div class="section-kicker">Understand</div>
+              <h2 id="learn-title">What the numbers mean</h2>
+            </div>
+          </div>
+
+          <div class="learn-grid">
+            <article>
+              <span class="learn-index">01</span>
+              <h3>Carbon footprint</h3>
+              <p>The greenhouse gas impact of everyday activities, expressed as carbon dioxide equivalent.</p>
+            </article>
+            <article>
+              <span class="learn-index">02</span>
+              <h3>Big levers</h3>
+              <p>Home energy, transport, food, shopping, and waste usually explain most personal emissions.</p>
+            </article>
+            <article>
+              <span class="learn-index">03</span>
+              <h3>Better tracking</h3>
+              <p>Weekly logs are easier to keep than perfect accounting and still reveal your direction.</p>
+            </article>
+            <article>
+              <span class="learn-index">04</span>
+              <h3>Personalized cuts</h3>
+              <p>The best action is the one linked to your largest source and simple enough to repeat.</p>
+            </article>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <button class="chat-launcher" id="chatLauncher" type="button" aria-controls="guide" aria-label="Open EcoGuide chat">
+      AI
+    </button>
+
+    <script src="app.js"></script>
+  </body>
+</html>
