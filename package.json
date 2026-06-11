@@ -1,0 +1,36 @@
+{
+  "name": "carbon-compass",
+  "version": "1.1.0",
+  "description": "Carbon Compass – Personal weekly carbon footprint navigator with personalised action plans",
+  "main": "app.js",
+  "scripts": {
+    "test": "jest app.test.js --verbose",
+    "test:coverage": "jest app.test.js --coverage --coverageReporters=text",
+    "test:ci": "jest app.test.js --ci --forceExit"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "transform": {},
+    "coverageThreshold": {
+      "global": {
+        "branches": 90,
+        "functions": 90,
+        "lines": 90,
+        "statements": 90
+      }
+    }
+  },
+  "keywords": [
+    "carbon",
+    "footprint",
+    "environment",
+    "sustainability",
+    "climate",
+    "co2",
+    "tracker"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "jest": "^29.0.0"
+  }
+}
